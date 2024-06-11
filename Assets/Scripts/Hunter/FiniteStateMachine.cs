@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FiniteStateMachine
+/*public class FiniteStateMachine
 {
-    State _actualState;
-    Dictionary<HunterStates, State> _states = new Dictionary<HunterStates, State>();
+    State<HunterStates> _actualState;
+    Dictionary<HunterStates, State<HunterStates>> _states = new Dictionary<HunterStates, State<HunterStates>>();
 
     public void ChangeState(HunterStates name)
     {
@@ -33,4 +33,4 @@ public class FiniteStateMachine
     }
 
 
-}
+}*/

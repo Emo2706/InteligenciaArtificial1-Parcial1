@@ -168,7 +168,7 @@ public abstract class SteeringAgent : MonoBehaviour
 
     
 
-    protected virtual void OnDrawGizmos()
+   /* protected virtual void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, _viewRadius);
@@ -178,7 +178,7 @@ public abstract class SteeringAgent : MonoBehaviour
 
         Gizmos.DrawLine(originA,originA + transform.right * _viewRadius);
         Gizmos.DrawLine(originB,originB + transform.right * _viewRadius);
-    }
+    }*/
 
    
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChaseState : State
+/*public class ChaseState : StateIA1
 {
 
     Transform _transform;
@@ -94,4 +94,4 @@ public class ChaseState : State
         return Seek(futurePos);
     }
 
-}
+}*/

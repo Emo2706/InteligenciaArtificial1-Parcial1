@@ -65,7 +65,7 @@ public class Hunter : MonoBehaviour
             energy -= Time.deltaTime;
 
             if (energy <= 0)
-                _stateMachine.SendInput(HunterStates.Rest);
+                ChangeState(HunterStates.Rest);
 
             
 
@@ -78,7 +78,7 @@ public class Hunter : MonoBehaviour
                 if (boid.GetComponent<Boids>() != null)
                 {
                     actualBoid = boid.GetComponent<Boids>();
-                    _stateMachine.SendInput(HunterStates.Chase);
+                    ChangeState(HunterStates.Chase);
                 }
             }
         };
@@ -120,7 +120,7 @@ public class Hunter : MonoBehaviour
 
             if (energy <= 0)
             {
-                _stateMachine.SendInput(HunterStates.Rest);
+                ChangeState(HunterStates.Rest);
             }
 
             _gm.ShiftPositionOnBounds(transform);
@@ -157,17 +157,19 @@ public class Hunter : MonoBehaviour
                     if (boid.GetComponent<Boids>() != null)
                     {
                         actualBoid = boid.GetComponent<Boids>();
-                        _stateMachine.SendInput(HunterStates.Chase);
+                       ChangeState(HunterStates.Chase);
 
                     }
                 }
-                _stateMachine.SendInput(HunterStates.Patrol);
+                ChangeState(HunterStates.Patrol);
             }
         };
         #endregion
 
         _stateMachine = new EventFSM<HunterStates>(patrol);
     }
+
+    void ChangeState(HunterStates state) => _stateMachine.SendInput(state);
     // Start is called before the first frame update
     void Start()
     {
@@ -195,13 +197,6 @@ public class Hunter : MonoBehaviour
         Gizmos.color = Color.black;
         Gizmos.DrawWireSphere(transform.position, viewRadius);
     }
-
-    void Move()
-    {
-       
-    }
-
-    
 
     Vector3 Seek(Vector3 targetPos, float speed)
     {

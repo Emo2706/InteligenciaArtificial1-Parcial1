@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PatrolState : State
+/*public class PatrolState : State
 {
     
     Transform _transform;
@@ -82,4 +82,4 @@ public class PatrolState : State
     }
 
 
-}
+}*/
