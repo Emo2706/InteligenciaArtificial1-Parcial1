@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class SteeringAgent : MonoBehaviour
+public abstract class SteeringAgent : GridEntity
 {
     public Vector3 dir;
     [SerializeField] protected float _maxSpeed = 5;

@@ -10,7 +10,7 @@ public class SpatialGrid : MonoBehaviour
     //punto de inicio de la grilla en X
     public float x;
     //punto de inicio de la grilla en Z
-    public float z;
+    public float y;
     //ancho de las celdas
     public float cellWidth;
     //alto de las celdas
@@ -124,7 +124,7 @@ public class SpatialGrid : MonoBehaviour
     {
         //quita la diferencia, divide segun las celdas y floorea
         return Tuple.Create(Mathf.FloorToInt((pos.x - x) / cellWidth),
-                            Mathf.FloorToInt((pos.z - z) / cellHeight));
+                            Mathf.FloorToInt((pos.z - y) / cellHeight));
     }
 
     public bool IsInsideGrid(Tuple<int, int> position)
@@ -171,9 +171,9 @@ public class SpatialGrid : MonoBehaviour
     public bool showLogs = true;
     private void OnDrawGizmos()
     {
-        var rows = Generate(z, curr => curr + cellHeight)
-                .Select(row => Tuple.Create(new Vector3(x, 0, row),
-                                            new Vector3(x + cellWidth * width, 0, row)));
+        var rows = Generate(y, curr => curr + cellHeight)
+                .Select(row => Tuple.Create(new Vector3(x, row, 0),
+                                            new Vector3(x + cellWidth * width, row, 0)));
 
         //equivalente de rows
         /*for (int i = 0; i <= height; i++)
@@ -182,7 +182,7 @@ public class SpatialGrid : MonoBehaviour
         }*/
 
         var cols = Generate(x, curr => curr + cellWidth)
-                   .Select(col => Tuple.Create(new Vector3(col, 0, z), new Vector3(col, 0, z + cellHeight * height)));
+                   .Select(col => Tuple.Create(new Vector3(col, y, 0), new Vector3(col, y + cellHeight * height, 0 )));
 
         var allLines = rows.Take(width + 1).Concat(cols.Take(height + 1));
 
