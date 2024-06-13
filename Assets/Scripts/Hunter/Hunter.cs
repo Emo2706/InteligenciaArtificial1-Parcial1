@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class Hunter : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class Hunter : MonoBehaviour
     public int maxForce;
     int _indexWayPoint;
     float _minDistWayPoint = 0.02f;
+    [SerializeField] float _minDist = 0.02f;
+    [SerializeField] List<SteeringAgent> boidsList = new List<SteeringAgent>();
 
     EventFSM<HunterStates> _stateMachine;
     
@@ -57,7 +60,7 @@ public class Hunter : MonoBehaviour
 
         patrol.OnEnter += x =>
          {
-             _material.color = Color.red;
+             _material.color = Color.magenta;
          };
 
         patrol.OnUpdate += () =>
@@ -67,11 +70,14 @@ public class Hunter : MonoBehaviour
             if (energy <= 0)
                 ChangeState(HunterStates.Rest);
 
+
             
 
+            actualBoid = boids(boidsList).FirstOrDefault();
 
+            if (actualBoid != null) ChangeState(HunterStates.Chase);
 
-            Collider[] boids = Physics.OverlapSphere(transform.position, viewRadius, obstacleMask);
+            /*Collider[] boids = Physics.OverlapSphere(transform.position, viewRadius, obstacleMask);
 
             foreach (var boid in boids)
             {
@@ -80,7 +86,7 @@ public class Hunter : MonoBehaviour
                     actualBoid = boid.GetComponent<Boids>();
                     ChangeState(HunterStates.Chase);
                 }
-            }
+            }*/
         };
 
         MovePatrol += () =>
@@ -109,7 +115,7 @@ public class Hunter : MonoBehaviour
         #region Chase
         chase.OnEnter += x =>
          {
-             _material.color = Color.grey;
+             _material.color = Color.green;
          };
 
         chase.OnUpdate += () =>
@@ -118,11 +124,15 @@ public class Hunter : MonoBehaviour
 
             energy -= Time.deltaTime;
 
-            if (energy <= 0)
-            {
-                ChangeState(HunterStates.Rest);
-            }
+            if (energy <= 0) ChangeState(HunterStates.Rest);
 
+            var dist = actualBoid.transform.position - transform.position;
+
+            if (dist.sqrMagnitude <= _minDist*_minDist)
+            {
+                
+                ChangeState(HunterStates.Patrol);
+            }
             _gm.ShiftPositionOnBounds(transform);
         };
 
@@ -175,15 +185,15 @@ public class Hunter : MonoBehaviour
     {
         energy = _maxEnergy;
         _gm = GameManager.instance;
-
-       
         
+ 
     }
 
     // Update is called once per frame
     void Update()
     {
         _stateMachine.Update();
+        
     }
 
     private void FixedUpdate()
@@ -223,6 +233,16 @@ public class Hunter : MonoBehaviour
     {
         Vector3 futurePos = boid.transform.position + boid.dir;
         return Seek(futurePos);
+    }
+
+    IEnumerable<Boids> boids(IEnumerable<SteeringAgent> boidsList)
+    {
+        var list = boidsList.Where(x => (x.transform.position - transform.position).sqrMagnitude <= viewRadius * viewRadius)
+                            .OrderBy(x => (x.transform.position - transform.position).sqrMagnitude <= viewRadius * viewRadius)
+                            .OfType<Boids>();
+
+        Debug.Log(list);
+        return list;
     }
 }
 

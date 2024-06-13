@@ -13,13 +13,17 @@ public class Boids : SteeringAgent
     [Range(0f, 2f)] public float alignmentWeight = 1;
     Renderer _renderer;
     [SerializeField] Food _food;
+    MeshRenderer _mr;
 
+    [SerializeField] float _secondsRespawn;
+    [SerializeField] Transform _respawnPoint;
 
     private void Start()
     {
         gm = GameManager.instance;
 
         _renderer = GetComponent<Renderer>();
+        _mr = GetComponent<MeshRenderer>();
 
         gm.boids.Add(this);
 
@@ -57,17 +61,31 @@ public class Boids : SteeringAgent
         if (dist >= _viewRadius * _viewRadius && distFood >= _viewRadius * _viewRadius)
         {
             Flocking();
-            _renderer.material.color = Color.green;
+            _renderer.material.color = Color.red;
         }
 
 
     }
 
-    
+    public void Deactivate()
+    {
+        _mr.enabled = false;
+
+        StartCoroutine(Respawn());
+    }
 
    void Flocking()
     {
         AddForce(Cohesion(gm.boids) * cohesionWeight + Separation(gm.boids) * separationWeight + Alignment(gm.boids) * alignmentWeight);
+    }
+
+    IEnumerator Respawn()
+    {
+        yield return new WaitForSeconds(_secondsRespawn);
+
+        transform.position = _respawnPoint.position;
+
+        _mr.enabled = true;
     }
 
 }
